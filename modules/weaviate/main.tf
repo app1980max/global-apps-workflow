@@ -5,6 +5,13 @@ resource "helm_release" "weaviate" {
   repository = "https://weaviate.github.io/weaviate-helm"
   chart      = "weaviate"
   version    = "17.5.1"
+  namespace  = "weaviate"
+  create_namespace = true
+
+  atomic           = false
+  cleanup_on_fail  = true
+  timeout          = 600
+
 
   set {
   name  = "service.type"
