@@ -6,7 +6,7 @@ variable "kubeconfig_path" {
 }
 
 variable "charts_path" {
-  default     = "./modules"
+  default     = "./charts"
   description = "The charts full path"
 }
 
