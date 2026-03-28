@@ -12,6 +12,9 @@ resource "helm_release" "flowise" {
   cleanup_on_fail  = true
   timeout          = 600
 
+# Forces recreate if something exists
+  force_update = true
+
   set {
     name  = "image.tag"
     value = "3.0.3"
