@@ -24,6 +24,6 @@ resource "helm_release" "flowise" {
 
   set {
     name  = "env.WEAVIATE_URL"
-    value = "http://weaviate.weaviate.svc.cluster.local:8080"
+    value = "http://weaviate.weaviate.svc.cluster.local:80"
   }
 }
