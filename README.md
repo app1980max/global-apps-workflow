@@ -1,22 +1,22 @@
 <img width="1048" height="608" alt="image" src="https://github.com/user-attachments/assets/f551ea0d-7c77-4789-8f81-1639a476f983" />
 
 
-## Multi-Cluster-Workflow | AWS - GCP - Azure 
+## Multi-Cluster-Workflow | AWS - GCP - Azure 🏅
 GitOps-style Terraform CI/CD workflow with GitHub Actions, multiple environments, and remote state backends. Here’s a breakdown and what it means for your setup:
 
 
-🏅  Workflow Overview
+🚀  Workflow Overview
 ```
-✔ Terraform Configurations
-✔ Code Push → GitHub Actions
-✔ Workspaces
-✔ Provision Resources
-✔ Terraform State Validation
+✅ Terraform Configurations
+✅ Code Push → GitHub Actions
+✅ Workspaces
+✅ Provision Resources
+✅ Terraform State Validation
 ```
 
 
 
-🚀 Deployment Options
+🧪 Deployment Options
 ```
 terraform init
 terraform validate
