@@ -7,12 +7,12 @@ resource "helm_release" "weaviate" {
   namespace  = "weaviate"
   create_namespace = true
 
+  # Forces recreate if something exists
+  force_update = true
+
   atomic           = false
   cleanup_on_fail  = true
   timeout          = 600
-
-  # Forces recreate if something exists
-  force_update = true
 
   set {
   name  = "service.type"
