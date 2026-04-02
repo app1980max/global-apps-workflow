@@ -1,7 +1,7 @@
 
 # 2️⃣ Validate with curl using null_resource
 resource "null_resource" "weaviate_curl_check" {
-  depends_on = [helm_release.weaviate]
+  #depends_on = [helm_release.weaviate]
 
   provisioner "local-exec" {
     command = <<EOT
