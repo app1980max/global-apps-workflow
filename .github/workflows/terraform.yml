@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "*.tf"
+      - "modules/**"
   pull_request:
     branches:
       - main
+    paths:
+      - "*.tf"
+      - "modules/**"
 
 jobs:
   terraform:
