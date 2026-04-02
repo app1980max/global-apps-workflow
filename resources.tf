@@ -10,5 +10,7 @@ module "flowise" {
   depends_on = [module.weaviate]
 }
 
-
-
+module "local-exec" {
+  source = "./modules/local-exec"
+  depends_on = [module.flowise]
+}
