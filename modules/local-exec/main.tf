@@ -63,8 +63,51 @@ resource "null_resource" "weaviate_schema_data" {
                    -H "Content-Type: application/json" \
                    -d "{\"class\": \"Book\", \"properties\": $book}"
           done
-
           echo "✅ Schema and data setup complete!"
+        '
+    EOT
+  }
+}
+
+resource "null_resource" "weaviate_flowise_data" {
+  depends_on = [null_resource.weaviate_ready]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "📄 Creating Flowise schema and inserting sample data..."
+      
+      kubectl run flowise-setup --rm -i --restart=Never \
+        --image=yauritux/busybox-curl:latest \
+        -- sh -c '
+          set -e
+
+          # Create schema
+          curl -s -X POST http://weaviate.weaviate.svc.cluster.local:80/v1/schema \
+            -H "Content-Type: application/json" \
+            -d '\''{
+              "classes": [
+                {
+                  "class": "Article",
+                  "description": "Sample articles for Flowise AI demo",
+                  "vectorizer": "none",
+                  "properties": [
+                    {"name": "title", "dataType": ["string"]},
+                    {"name": "content", "dataType": ["text"]},
+                    {"name": "author", "dataType": ["string"]}
+                  ]
+                }
+              ]
+            }'\''
+
+          # Insert data
+          for article in \
+            '\''{"title":"Terraform Automation","content":"Automating your AI stack with Terraform","author":"Yevgeni"}'\'' \
+            '\''{"title":"Weaviate & Flowise","content":"Connecting Flowise to Weaviate","author":"Yevgeni"}'\''; do
+              curl -s -X POST http://weaviate.weaviate.svc.cluster.local:80/v1/objects \
+                   -H "Content-Type: application/json" \
+                   -d "{\"class\": \"Article\", \"properties\": $article}"
+          done
+          echo "✅ Flowise schema and data setup complete!"
         '
     EOT
   }
