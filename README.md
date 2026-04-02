@@ -1,7 +1,7 @@
 <img width="1048" height="608" alt="image" src="https://github.com/user-attachments/assets/9943a8d3-4285-470b-8cc3-677f5b01e107" />
 
 
-## Multi-Application-Workflow | AWS - GCP - Azure 🏅
+## Multi-Application-Workflow | 🏅
 GitOps-style Terraform CI/CD workflow with GitHub Actions, multiple environments, and remote state backends. Here’s a breakdown and what it means for your setup:
 
 
