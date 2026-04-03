@@ -24,6 +24,7 @@ resource "null_resource" "weaviate_ready" {
   }
 }
 
+
 resource "null_resource" "weaviate_schema_data" {
   depends_on = [null_resource.weaviate_ready]
 
@@ -69,13 +70,14 @@ resource "null_resource" "weaviate_schema_data" {
   }
 }
 
+
 resource "null_resource" "weaviate_flowise_data" {
   depends_on = [null_resource.weaviate_ready]
 
   provisioner "local-exec" {
     command = <<EOT
       echo "📄 Creating Flowise schema and inserting sample data..."
-      
+
       kubectl run flowise-setup --rm -i --restart=Never \
         --image=yauritux/busybox-curl:latest \
         -- sh -c '
@@ -108,6 +110,32 @@ resource "null_resource" "weaviate_flowise_data" {
                    -d "{\"class\": \"Article\", \"properties\": $article}"
           done
           echo "✅ Flowise schema and data setup complete!"
+        '
+    EOT
+  }
+}
+
+
+resource "null_resource" "flowise_weaviate_validation" {
+  depends_on = [null_resource.weaviate_flowise_data]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "🔎 Validating Flowise can access Weaviate data..."
+
+      kubectl run flowise-setup --rm -i --restart=Never \
+        --image=yauritux/busybox-curl:latest \
+        -- sh -c '
+          set -e
+          WEAVIATE=http://weaviate.weaviate.svc.cluster.local:80
+
+          echo "📚 Checking Book objects..."
+          curl -s "http://weaviate.weaviate.svc.cluster.local:80/v1/objects?class=Book"
+
+          echo "📝 Checking Article objects..."
+          curl -s "http://weaviate.weaviate.svc.cluster.local:80/v1/objects?class=Article"
+
+          echo "✅ Flowise validation complete! Data is accessible."
         '
     EOT
   }
