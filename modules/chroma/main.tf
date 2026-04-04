@@ -1,19 +1,21 @@
 
-resource "helm_release" "distributed_chroma" {
-  name       = "distributed-chroma"
+resource "helm_release" "chroma" {
+  name       = "chroma"
   namespace  = "chroma"
-  repository = "https://charts.chroma.com"  # replace with actual Helm repo URL
-  chart      = "distributed-chroma"
-  version    = "0.1.0"                       # replace with desired chart version
+
+  repository = "https://amikos-tech.github.io/chromadb-chart/"
+  chart      = "chromadb"
+
   create_namespace = true
 
-  atomic           = false
-  cleanup_on_fail  = true
-  timeout          = 600
+  set {
+    name  = "persistence.enabled"
+    value = "true"
+  }
 
   set {
-    name  = "replicaCount"
-    value = 1 #value = 3
+    name  = "persistence.size"
+    value = "10Gi"
   }
 
   set {
