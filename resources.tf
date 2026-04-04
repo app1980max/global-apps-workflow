@@ -10,8 +10,7 @@ module "local-exec" {
   depends_on = [module.weaviate]
 }
 
-module "flowise" {
-  source = "./modules/flowise"
+module "chroma" {
+  source = "./modules/chroma"
   depends_on = [module.local-exec]
 }
-
