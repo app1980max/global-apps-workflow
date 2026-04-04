@@ -17,8 +17,9 @@ GitOps-style Terraform CI/CD workflow with GitHub Actions, multiple environments
 
 🎯 Workflow
 ```
-✔ Fully automated provisioning with Terraform
-✔ Manage your application with GitHub Actions
+curl -H "X-API-KEY: dev-key-123" http://weaviate.weaviate.svc.cluster.local:80/v1/meta
+curl -H "X-API-KEY: dev-key-123" http://weaviate.weaviate.svc.cluster.local:80/v1/schema
+
 ```
 
 
