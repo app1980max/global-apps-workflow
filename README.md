@@ -5,7 +5,7 @@
 GitOps-style Terraform CI/CD workflow with GitHub Actions, multiple environments, and remote state backends. Here’s a breakdown and what it means for your setup:
 
 
-🚀  Overview
+🎯  Overview
 ```
 ✅ Terraform Configurations
 ✅ Code Push → GitHub Actions
@@ -15,7 +15,7 @@ GitOps-style Terraform CI/CD workflow with GitHub Actions, multiple environments
 ```
 
 
-🎯 Workflow
+🔎 Query
 ```
 curl -H "X-API-KEY: dev-key-123" http://weaviate.weaviate.svc.cluster.local:80/v1/meta
 
@@ -48,7 +48,7 @@ curl -X POST http://weaviate.weaviate.svc.cluster.local:80/v1/schema/properties 
 ```
 
 
-🧪 Deployment Options
+🚀 Deployment Options
 ```
 terraform init
 terraform validate
