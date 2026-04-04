@@ -1,5 +1,41 @@
+
+variable "namespace" {
+  type        = string
+  default     = "weaviate"
+  description = "Kubernetes namespace"
+}
+
+variable "release_name" {
+  type    = string
+  default = "weaviate"
+}
+
+variable "chart_version" {
+  type    = string
+  default = "17.5.1"
+}
+
+variable "vectorizer_module" {
+  type    = string
+  default = "none"
+}
+
+variable "storage_size" {
+  type    = string
+  default = "10Gi"
+}
+
+variable "api_keys" {
+  type    = list(string)
+  default = ["dev-key-123"]
+}
+
+variable "api_users" {
+  type    = list(string)
+  default = ["admin"]
+}
+
 variable "classes" {
-  description = "List of Weaviate classes with properties and vectorizer"
   type = list(object({
     name        = string
     description = string
@@ -10,27 +46,12 @@ variable "classes" {
       description = string
     }))
   }))
+  default = []
 }
 
-default = [
-  {
-    name        = "Products"
-    description = "Stores product information"
-    vectorizer  = "text2vec-transformers"
-    properties  = [
-      { name = "name", dataType = ["text"], description = "Product name" },
-      { name = "description", dataType = ["text"], description = "Product description" },
-      { name = "price", dataType = ["number"], description = "Product price" }
-    ]
-  },
-  {
-    name        = "Article"
-    description = "Articles with author/content/title"
-    vectorizer  = "text2vec-transformers"
-    properties  = [
-      { name = "title", dataType = ["text"], description = "Article title" },
-      { name = "author", dataType = ["text"], description = "Article author" },
-      { name = "content", dataType = ["text"], description = "Article content" }
-    ]
-  }
-]
+variable "initial_data" {
+  type = map(list(object({
+    properties = map(any)
+  })))
+  default = {}
+}
