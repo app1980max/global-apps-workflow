@@ -18,8 +18,15 @@ GitOps-style Terraform CI/CD workflow with GitHub Actions, multiple environments
 🎯 Workflow
 ```
 curl -H "X-API-KEY: dev-key-123" http://weaviate.weaviate.svc.cluster.local:80/v1/meta
+
+Verify your schema:
 curl -H "X-API-KEY: dev-key-123" http://weaviate.weaviate.svc.cluster.local:80/v1/schema
 
+Query only existing fields:
+curl -X POST http://weaviate.weaviate.svc.cluster.local:80/v1/graphql \
+-H "Content-Type: application/json" \
+-H "X-API-KEY: dev-key-123" \
+-d '{"query": "{ Get { Products { name price _additional { vector } } } }"}'
 ```
 
 
