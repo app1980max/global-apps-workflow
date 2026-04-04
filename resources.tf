@@ -22,4 +22,12 @@ module "local-exec" {
   depends_on = [module.weaviate]
 }
 
+module "data-exec" {
+  source = "./modules/data-exec"
+  depends_on = [module.local-exec]
+
+  namespace         = var.namespace
+  api_keys          = var.api_keys
+  helm_release_name = "weaviate"
+}
 
