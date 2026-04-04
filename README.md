@@ -22,11 +22,22 @@ curl -H "X-API-KEY: dev-key-123" http://weaviate.weaviate.svc.cluster.local:80/v
 Verify your schema:
 curl -H "X-API-KEY: dev-key-123" http://weaviate.weaviate.svc.cluster.local:80/v1/schema
 
-Query only existing fields:
+Option A: Query only existing fields
 curl -X POST http://weaviate.weaviate.svc.cluster.local:80/v1/graphql \
 -H "Content-Type: application/json" \
 -H "X-API-KEY: dev-key-123" \
 -d '{"query": "{ Get { Products { name price _additional { vector } } } }"}'
+
+Option B: Add the missing description property to the class
+curl -X POST http://weaviate.weaviate.svc.cluster.local:8080/v1/schema/properties \
+-H "Content-Type: application/json" \
+-H "X-API-KEY: dev-key-123" \
+-d '{
+  "class": "Products",
+  "name": "description",
+  "dataType": ["text"],
+  "description": "Product description"
+}'
 ```
 
 
