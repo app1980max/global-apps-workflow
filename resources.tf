@@ -22,8 +22,3 @@ module "local-exec" {
   depends_on = [module.weaviate]
 }
 
-#module "chroma" {
-#  source = "./modules/chroma"
-#  depends_on = [module.local-exec]
-#}
-
