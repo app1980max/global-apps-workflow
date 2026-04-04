@@ -35,23 +35,3 @@ variable "api_users" {
   default = ["admin"]
 }
 
-variable "classes" {
-  type = list(object({
-    name        = string
-    description = string
-    vectorizer  = string
-    properties  = list(object({
-      name        = string
-      dataType    = list(string)
-      description = string
-    }))
-  }))
-  default = []
-}
-
-variable "initial_data" {
-  type = map(list(object({
-    properties = map(any)
-  })))
-  default = {}
-}
