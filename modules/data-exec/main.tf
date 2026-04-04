@@ -1,52 +1,65 @@
 
 resource "null_resource" "weaviate_products_schema" {
-  depends_on = [helm_release.weaviate]
+  depends_on = [] # ensure module runs after helm in root
 
   provisioner "local-exec" {
     command = <<EOT
-      echo "📄 Creating Products schema and inserting sample data inside Kubernetes..."
+      echo "📄 Creating Products schema and inserting sample data..."
 
-      kubectl run schema-products --rm -i --restart=Never \
-        --image=yauritux/busybox-curl:latest \
-        -- sh -c '
+      kubectl run schema-products \
+        --restart=Never \
+        --image=curlimages/curl:latest \
+        --env="WEAVIATE_API_KEY=${var.api_keys[0]}" \
+        --env="WEAVIATE_NAMESPACE=${var.namespace}" \
+        --command -- sh -c '
           set -e
 
-          API_KEY="$$WEAVIATE_API_KEY"
-          NAMESPACE="$$WEAVIATE_NAMESPACE"
-          WEAVIATE_URL="http://weaviate.$$NAMESPACE.svc.cluster.local:8080"
+          echo "🔍 Using namespace: $WEAVIATE_NAMESPACE"
 
-          # 1️⃣ Create Products schema
-          curl -s -X POST $$WEAVIATE_URL/v1/schema \
+          WEAVIATE_URL="http://weaviate.$WEAVIATE_NAMESPACE.svc.cluster.local:80"
+
+          echo "🌐 Weaviate URL: $WEAVIATE_URL"
+
+          # Wait for Weaviate readiness
+          echo "⏳ Waiting for Weaviate..."
+          for i in $(seq 1 30); do
+            if curl -s $WEAVIATE_URL/v1/.well-known/ready > /dev/null; then
+              echo "✅ Weaviate is ready!"
+              break
+            fi
+            sleep 5
+          done
+
+          # Create schema (ignore if exists)
+          echo "📦 Creating Products schema..."
+          curl -s -o /dev/null -w "%%%{http_code}" -X POST $WEAVIATE_URL/v1/schema \
             -H "Content-Type: application/json" \
-            -H "X-API-KEY: $$API_KEY" \
+            -H "X-API-KEY: $WEAVIATE_API_KEY" \
             -d '\''{
               "class": "Products",
               "description": "Stores product information",
               "vectorizer": "none",
               "properties": [
-                {"name": "name", "description": "Product name", "dataType": ["string"]},
-                {"name": "price", "description": "Product price", "dataType": ["number"]}
+                {"name": "name", "dataType": ["string"]},
+                {"name": "price", "dataType": ["number"]}
               ]
-            }'\''
+            }'\'' || true
 
-          # 2️⃣ Insert sample products
+          echo "📥 Inserting sample data..."
+
           for product in \
             '\''{"name":"Laptop","price":1200.50}'\'' \
             '\''{"name":"Smartphone","price":799.99}'\'' \
             '\''{"name":"Headphones","price":199.99}'\''; do
-              curl -s -X POST $$WEAVIATE_URL/v1/objects \
-                   -H "Content-Type: application/json" \
-                   -H "X-API-KEY: $$API_KEY" \
-                   -d "{\"class\": \"Products\", \"properties\": $$product}"
+
+              curl -s -X POST $WEAVIATE_URL/v1/objects \
+                -H "Content-Type: application/json" \
+                -H "X-API-KEY: $WEAVIATE_API_KEY" \
+                -d "{\"class\": \"Products\", \"properties\": $product}"
           done
 
-          echo "✅ Products schema and sample data setup complete!"
+          echo "✅ Done!"
         '
     EOT
-
-    environment = {
-      WEAVIATE_API_KEY   = var.api_keys[0]
-      WEAVIATE_NAMESPACE = var.namespace
-    }
   }
 }
