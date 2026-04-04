@@ -31,3 +31,9 @@ module "data-exec" {
   helm_release_name = "weaviate"
 }
 
+module "flowise" {
+  source = "./modules/flowise"
+  depends_on = [module.data-exec]
+}
+
+
