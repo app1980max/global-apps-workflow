@@ -32,6 +32,9 @@ Option B: Query via REST (curl)
 curl -s http://weaviate.weaviate.svc.cluster.local:80/v1/objects \
   -H "X-API-KEY: dev-key-123" | jq
 
+curl -s "http://weaviate.weaviate.svc.cluster.local/v1/objects?class=Products" \
+  -H "X-API-KEY: dev-key-123" | jq
+
 Option C: Add the missing description property to the class
 curl -X POST http://weaviate.weaviate.svc.cluster.local:80/v1/schema/properties \
 -H "Content-Type: application/json" \
